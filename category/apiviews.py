@@ -10,7 +10,7 @@ class CategoriesList(generics.ListCreateAPIView):
     serializer_class = CategoriesSerializer
 
 
-class CategoriesDetail(generics.RetrieveDestroyAPIView):
+class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
 
@@ -20,7 +20,7 @@ class SubCategoriesList(generics.ListCreateAPIView):
     serializer_class = SubCategoriesSerializer
 
 
-class SubCategoriesDetail(generics.RetrieveDestroyAPIView):
+class SubCategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubCategories.objects.all()
     serializer_class = SubCategoriesSerializer
 
