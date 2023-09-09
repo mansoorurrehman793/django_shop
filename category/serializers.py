@@ -4,6 +4,7 @@ from .models import Categories,SubCategories
 
 
 class SubCategoriesSerializer(serializers.ModelSerializer):
+    
 
     class Meta:
         model = SubCategories

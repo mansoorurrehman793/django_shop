@@ -5,8 +5,10 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+# from django.db import models
+
 class Product(models.Model):
-    id = models.AutoField( primary_key=True)
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     product_sku = models.CharField(max_length=255)
     description = models.TextField(default=None)
