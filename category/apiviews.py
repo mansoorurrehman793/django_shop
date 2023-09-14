@@ -1,8 +1,8 @@
 from rest_framework import generics
 from rest_framework.response import Response
 
-from .models import Categories,SubCategories
-from .serializers import CategoriesSerializer,SubCategoriesSerializer
+from .models import Categories, SubCategories
+from .serializers import CategoriesSerializer, SubCategoriesSerializer
 
 
 class CategoriesList(generics.ListCreateAPIView):
@@ -23,5 +23,3 @@ class SubCategoriesList(generics.ListCreateAPIView):
 class SubCategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubCategories.objects.all()
     serializer_class = SubCategoriesSerializer
-
-
