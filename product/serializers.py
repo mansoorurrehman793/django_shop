@@ -5,7 +5,7 @@ from .models import Product
 from category.serializers import SubCategoriesSerializer, CategoriesSerializer
 
 from category.models import Categories, SubCategories
-from image.serializers import ImagesSerializer, FilesSerializer
+# from image.serializers import ImagesSerializer, FilesSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
