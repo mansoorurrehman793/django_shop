@@ -21,14 +21,13 @@ class ProductView(APIView):
                 {"stauts": "success", "data": serializer.data},
                 status=status.HTTP_200_OK,
             )
-
         instance = get_object_or_404(models.Product, id=pk)
         serializer = serializers.ProductGetSerializer(instance)
         return Response(
             {"stauts": "success", "data": serializer.data}, status=status.HTTP_200_OK
         )
 
-    def post(self, request, format=None):
+    def post(self, request, pk=None, format=None):
         serializer = serializers.ProductSerializer(data=request.data)
         print("serializer.is_valid()", serializer.is_valid())
         if serializer.is_valid():
@@ -82,5 +81,5 @@ class ProductView(APIView):
         instance = models.Product.objects.get(pk=pk)
         instance.delete()
         return Response(
-            {"msg": "contact deleted successfully"}, status=status.HTTP_204_NO_CONTENT
+            {"msg": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT
         )

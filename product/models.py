@@ -17,7 +17,6 @@ class Product(models.Model):
     details = models.TextField()
     price = models.FloatField(default=0, blank=True)
     availability = models.IntegerField(default=0, blank=True)
-    quantity = models.IntegerField(default=0, blank=True)
     create_date = models.DateTimeField(auto_now=True)
     update_date = models.DateTimeField(auto_now=True)
 
