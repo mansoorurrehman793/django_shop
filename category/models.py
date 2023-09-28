@@ -8,8 +8,6 @@ class Categories(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, default=None)
     description = models.TextField(default=None)
-    # Category has_many SubCatagories
-    # Category has_many Products
 
     def __str__(self):
         return self.name
