@@ -1,14 +1,15 @@
 from django.urls import path
-from .apiviews import ImagesList
-from .apiviews import ImagesDetail
+# from .apiviews import ImagesList
+# from .apiviews import ImagesDetail
+
+from .views import ImageAPI
 
 
 
 
 urlpatterns = [
-
-    path("Images/", ImagesList.as_view(), name="images_list"),
-    path("Images/<int:pk>/", ImagesDetail.as_view(), name="images_detail"),
-
+    path("Images/", ImageAPI.as_view()),
+    path("Images/<int:pk>/", ImageAPI.as_view()),
+    # path("Images/", ImageAPI.as_view()),
+    # path("Images/<int:pk>/", ImageAPI.as_view())
 ]
-
