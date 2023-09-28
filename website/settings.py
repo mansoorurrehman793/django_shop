@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "product",
     "category",
     "image",
+    "order"
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ ROOT_URLCONF = "website.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR,''],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
