@@ -6,7 +6,8 @@ from rest_framework import status
 
 import order.models as models
 import order.serializers as serializers
-# from order.models import Orders, OrderProduct
+
+# from order.models import Orders, Cart
 
 # Create your views here.
 
@@ -31,6 +32,7 @@ class OrdersView(APIView):
     
     def post(self, request, pk=None, format=None):
         serializer = serializers.OrdersSerializer(data=request.data)
+        print(serializer.initial_data)
         print("serializer.is_valid()", serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
@@ -67,14 +69,18 @@ class OrdersView(APIView):
             instance=instance, data=request.data, partial=False
         )
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(
-                {"stauts": "success", "data": serializer.data},
-                status=status.HTTP_200_OK,
-            )
-
+            updated_products_data = serializer.validated_data.get('products', [])
+            for product_data in updated_products_data:
+                product_id = product_data.get('id')
+                requested_quantity = product_data.get('quantity')
+        serializer.save()
         return Response(
-            {"stauts": "error", "data": serializer.errors},
+            {"status": "success", "data": serializer.data},
+                status=status.HTTP_200_OK,
+        )
+        serializer.save()
+        return Response(
+             {"status": "error", "data": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
     
@@ -86,43 +92,43 @@ class OrdersView(APIView):
         )
     
 
-class OrderProductView(APIView):
+class CartView(APIView):
 
     def get(self, request, pk=None, format=None):
         if pk is None:
-            instance = models.OrderProduct.objects.all()
-            serializer = serializers.OrderProductSerializer(instance, many=True)
+            instance = models.Cart.objects.all()
+            serializer = serializers.CartSerializer(instance, many=True)
             return Response(
                 {"stauts": "success", "data": serializer.data},
                 status=status.HTTP_200_OK,
             )
         
-        instance = get_object_or_404(models.OrderProduct, id=pk)
-        serializer = serializers.OrderProductSerializer(instance)
+        instance = get_object_or_404(models.Cart, id=pk)
+        serializer = serializers.CartSerializer(instance)
         return Response(
                 {"stauts": "success", "data": serializer.data},
                 status=status.HTTP_200_OK,
             )
-    
+
+
     def post(self, request, pk=None, format=None):
-        serializer = serializers.OrderProductSerializer(data=request.data)
-        print("serializer.is_valid()", serializer.is_valid())
+        serializer = serializers.CartSerializer(data=request.data)
+        # print("check serializer is valid",serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
             return Response(
                 {"stauts": "success", "data": serializer.data},
-                status=status.HTTP_201_CREATED,
-            )
-
+                status=status.HTTP_201_CREATED)
         return Response(
 
             {"stauts": "error", "data": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
     
+    
     def patch(self, request, pk, format=None):
-        instance = get_object_or_404(models.OrderProduct, pk=pk)
-        serializer = serializers.OrderProductSerializer(
+        instance = get_object_or_404(models.Cart, pk=pk)
+        serializer = serializers.CartSerializer(
             instance=instance, data=request.data, partial=True
         )
         if serializer.is_valid(raise_exception=True):
@@ -138,28 +144,34 @@ class OrderProductView(APIView):
         )
     
     def put(self, request, pk, format=None):
-        instance = get_object_or_404(models.OrderProduct, pk=pk)
-        serializer = serializers.OrderProductSerializer(
+        instance = get_object_or_404(models.Cart, pk=pk)
+        serializer = serializers.CartSerializer(
             instance=instance, data=request.data, partial=False
         )
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(
-                {"stauts": "success", "data": serializer.data},
+                {"status": "success", "data": serializer.data},
                 status=status.HTTP_200_OK,
             )
 
         return Response(
-            {"stauts": "error", "data": serializer.errors},
+            {"status": "error", "data": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+   
     def delete(self, request, pk=None, format=None):
-        instance = get_object_or_404(models.OrderProduct, pk=pk)
+        instance = get_object_or_404(models.Cart, pk=pk)
         instance.delete()
         return Response(
             {"msg": "Sub Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT
         )
+
+                
+
+
+
+
 
 
     
