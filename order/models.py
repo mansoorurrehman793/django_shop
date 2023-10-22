@@ -3,18 +3,24 @@ from django.contrib.auth.models import User
 from product.models import Product
 
 # Create your models here.
-class CartItem(models.Model):
-    product =  models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # products = models.ManyToManyField(Product)
-    # quantity = models.PositiveIntegerField(default=1)
-    cart_items = models.ManyToManyField(CartItem)
-
+   
     def __str__(self):
         return f"{self.user.username}"
+    
+class CartItem(models.Model):
+    cart = models.ForeignKey(
+        Cart,on_delete=models.SET_NULL, null=True, related_name="cart_items"
+    )
+    product =  models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    is_exclude = models.BooleanField(default=False, db_comment="to check the item that need to be exclude from the cart",)
+
+    # flag_reason = models.CharField(max_length=255, blank=True, null=True)
 
 class Orders(models.Model):
     id = models.AutoField(primary_key=True)
@@ -32,15 +38,3 @@ class Orders(models.Model):
         return f"Order {self.order_number} by {self.user.username}"
     
 
-# class OrderProduct(models.Model):
-# class Cart(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     products = models.ManyToManyField(Product, on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
-
-#     class Meta:
-#         unique_together = ('user', 'product')
-
-
-#     def __str__(self):
-#         return f"{self.quantity} x {self.product.name} in  {self.user.username}"
