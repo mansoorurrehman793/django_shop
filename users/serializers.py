@@ -6,8 +6,6 @@ from django.contrib.auth.hashers import make_password
 
 class SignUpCustomSerializer(serializers.ModelSerializer):
 
-    
-
     class Meta:
         model = models.User
         # fields = "__all__"
