@@ -24,16 +24,18 @@ from users.utils import Util
 import users.models as models
 import users.serializers as serializers
 
+
 class ExampleView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
         content = {
-            'user': str(request.user),
-            'auth': str(request.auth),
+            "user": str(request.user),
+            "auth": str(request.auth),
         }
         return Response(content)
+
 
 class SignUpView(APIView):
     def post(self, request, format=None):
@@ -65,48 +67,25 @@ class SignUpView(APIView):
                     "message": f'An activation link has been sent to {user_account["email"]}',
                 },
                 status=status.HTTP_205_RESET_CONTENT,
-
             )
-        
+
         return Response(
             {"stauts": "error", "data": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-class LoginView(APIView):
-    serializer_class = LoginCustomSerializer
-
-    def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data['email']
-        password = serializer.validated_data['password']
-
-        user = authenticate(request, email=email, password=password)
-        # user = authenticate(email=email, password=password)
-        if user is not None:
-            login(request, user)
-            # token = get_tokens_for_user(user)
-            return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-        
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    parser_classes = (JSONParser,)
-    serializer_class = serializers.MyTokenObtainPairSerializer
-
-
-class CustomTokenRefreshView(TokenRefreshView):
-    parser_classes = (JSONParser,)
-    serializer_class = serializers.MyTokenObtainPairSerializer
 
 
 class VerifyEmail(APIView):
     def get(self, request, format=None):
         token = request.GET.get("token")
         try:
-            decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256",])
+            decoded_data = jwt.decode(
+                token,
+                settings.SECRET_KEY,
+                algorithms=[
+                    "HS256",
+                ],
+            )
             user_id = decoded_data["user_id"]
             user = models.User.objects.get(id=user_id)
             user.is_active = True
@@ -115,17 +94,18 @@ class VerifyEmail(APIView):
                 {"success": "Successfully activated user account"},
                 status=status.HTTP_200_OK,
             )
-        
+
         except jwt.ExpiredSignatureError as identifier:
             return Response(
                 {"error": "Activation Expired"}, status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         except jwt.exceptions.DecodeError as identifier:
             return Response(
                 {"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST
             )
-        
+
+
 class CheckEmailExistsView(APIView):
     # @swagger_auto_schema(request_body=serializers.CheckEmailExistsSerializer)
     def post(self, request, format=None):
@@ -140,13 +120,3 @@ class CheckEmailExistsView(APIView):
                 {"stauts": "error", "data": f"Email is already exsist"},
                 status=status.HTTP_409_CONFLICT,
             )
-  
-  
-    
-    
-    
-
-
-    
-
-
