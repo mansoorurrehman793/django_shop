@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 import category.models as models
 import category.serializers as serializers
@@ -10,6 +12,8 @@ import category.serializers as serializers
 
 
 class CategoryAPI(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None, format=None):
         if pk is None:
